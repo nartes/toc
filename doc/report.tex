@@ -1,0 +1,221 @@
+\documentclass{amsart}
+
+\usepackage[utf8]{inputenc}
+\usepackage[russianb]{babel}
+\usepackage{moreverb}
+\usepackage{amssymb}
+\usepackage{multicol}
+
+\begin{document}
+\section{Задачи}
+
+\subsection{5}
+
+Исходное условие:
+Дан граф $G'=(V',E'), V'=\{1,\dots,k\}, |E'|=m$.
+Необходимо распознать наличие клики размера $c$.
+
+Сводим к задаче
+$P1 | Prec, w_j= \{ 1,2,\frac{|A|}{2}-7 \}, pj=p | \sum w_j T_j$,
+где $T_j = \max \{C_j - d_j, 0\}$.
+
+\[
+  v_i, \quad i=\overline{1,k}, \quad p_{v_i} = 1, \quad
+  w_{v_i} = W, \quad d_{v_i} = k + l
+\]
+
+\[
+  e_{ij}, \quad (i,j) \in E, \quad p_{e_{ij}} = 1, \quad
+  w_{e_{ij}} = 1, \quad d_{e_{ij}} = c + l
+\]
+
+\[
+  Prec: v_i \to e_{ij}, \quad v_j \to e_{ij}, \quad
+  y = ?
+\]
+
+Если существует клика размера $c$, то
+
+\begin{verbatim}
+[         c           ][            l         ][             ]
+     вершины клики            ребра клики           ???
+\end{verbatim}
+
+\[
+  \sum w_j T_j =
+  \sum_{<V>} t_i W +
+  \sum_{<E_1>} t_i + \sum_{<E_2>} t_i,
+\]
+где $<E_1>$ множество ребер до $l+k$, а $<E_2>$ множество ребер
+после $l+k$.
+
+1. Простои только ухудшают целевую функцию.
+
+2. Между $c+l$ и $k+l$ ребра предпочтительнее чем вершины, если
+только не нарушается порядок предшествования.
+
+Давайте поступим другим образом:
+
+\[
+  d_{v_j} = k + m, \quad w_{v_j} = 1
+\]
+
+\[
+  \sum_{<E>} t_i \leqslant m - l
+\]
+то есть только ребра могут запаздывать
+
+$\sum U_j$ новая целевая функция.
+$\sum U_j = m - l$ есть условие задачи распознавания.
+Если в графе нет клики, то упаковка по крайней мере $|E|=l$ ребер
+на индуцированном графе $|V|=c$ вершинами не возможна, таким образом
+нужна больше вершин, тогда по крайней мере $m - l +1$
+работ запоздают.
+
+\subsection{Лекция 11}
+We have $M$ machines, and $n$ equal jobs to be processed.
+Each machine can process only one job at a time and has $W_h$ is a price
+for one time unit per $H=1,\dots,M$.
+
+The processing time depends on $k$ -- a number of processed jobs and
+$t$ -- a time of begin processing:
+\[
+  p_H(k,t) = \lambda_H(k-1) + \phi_H(k-1)t
+\]
+$\lambda_H \geqslant 0, \phi_H \geqslant 1$ are functions.
+
+We are to find schedule $s$ so, that a cost function is minimized
+\[
+  \sum_{H=1}^M W_H
+    \left(
+      \sum_{k=1}^{n_H(s)} p_H(k,t_H^k(s))
+    \right) \to \min
+\]
+$n_H(s)$ is the number of jobs per machine,
+$t_H^k(s)$ -- start time of processing job $k$ at a machine $H$ and
+equals:
+\begin{align*}
+  t_H^k(s)
+    & \geqslant t_H^{k-1}(s) + p_H(k-1, t_H^{k-1}(s)) = \\
+    & = \underset{>0}{\lambda_H(k-1)} +
+      \underset{\geqslant 2}{(1 + \phi_H(k-1))}t_H^{k-1}(s) 
+\end{align*}
+
+Let's look at
+$p_H(k,t) = \lambda_H(k-1) + \underset{\geqslant 1}{\phi_H(k-1)}t$,
+and come up with a conclusion
+that thus the processing time
+is lower bounded by geometrical progression with a divisor $\geqslant$ 2.
+
+Let's make equality by adding $\Delta$:
+\[
+  t_H^k(s) + \Delta_H^k(s) =
+  t_H^{k-1}(s) + p_H(k-1, t_H^{k-1}(s))
+\]
+Then we claim that $\Delta_H^k(s) = 0$, cause otherwise each additional
+time unit gains equal unit to $p_H$, and thus $W_H$ units to cost
+function, and at least 2 units to next start times on the machine.
+
+Thus each schedule can specified by $n_H(s)$ per $H=1,\dots,M$.
+
+Notable fact, that $p_H(k)$ is strict monotonuous function.
+
+\begin{multicols}{2}
+\[
+  \begin{matrix}
+    W_1 \times \\
+    W_2 \times \\
+    W_3 \times \\
+    \dots \\
+    W_M \times
+  \end{matrix}
+  \left\{
+    \begin{matrix}
+      p_1^1 & < & p_1^2 & < & p_1^3 & < & \dots \\
+      p_2^1 & < & p_2^2 & < & p_2^3 & < & \dots \\
+      p_3^1 & < & p_3^2 & < & p_3^3 & < & \dots \\
+      & & & \dots \\
+      p_M^1 & < & p_M^2 & < & p_M^3 & < & \dots \\
+    \end{matrix}
+  \right\}
+\]
+
+\hfill
+
+On the left you see possible processing time for each machine.
+We are to choose first $n_H$ at each machine.
+Thus we can not skip anything. We can multiply each row by $W_H$
+and inequalities remain.
+\end{multicols}
+
+Let us consider the following example:
+\begin{multicols}{2}
+\[
+  \begin{matrix}
+    a & 1 & 2 & 3 & 5 \\
+    b & 5 & 6 & 7 & 10 \\
+    c & 1 & 2 & 3 & 4 \\
+    d & 4 & 8 & 12 & 20 \\
+  \end{matrix}
+\]
+
+\hfill
+
+\[
+  n = 7
+\]
+
+If we are adding any sequence of $S_H^i$ then its first number
+must be greater than any other not taken one, otherwise
+optimization can occur
+\[
+  (S_H^1, S_H^2,\dots, S_H^l) \Rightarrow S_H^1 \geqslant \forall S_*^1
+\]
+\end{multicols}
+
+Let's apply greedy algorithm and thus we obtain the following sequence
+where wirst $n$ numbers are the answer for the original problem.
+So first 7 numbers are the answer for the $n=7$.
+\begin{equation}\label{E:greedy_seq}
+  \begin{matrix}
+    a_1 & c_1 & a_2 & c_2 & a_3 & c_3 & c_4 & d_1 & a_4 & \dots \\
+    1,  & 1,  & 2,  & 2,  & 3,  & 3,  &4,  & 4,   & 5,  & \dots \\
+  \end{matrix}
+\end{equation}
+
+We are to choose amount of first numbers at each row.
+It can be coded as ${p_H^k | H = 1,\dots,M, k=1,\dots,n_H}$ -- set
+of choosen numbers.
+
+Let's define $s_0=()$. The next number, $s_1=(s_1^1)$
+let's choose as the smallest possible.
+As each row are ascending ordered, then our sequence
+$s_n=(s_n^1, s_n^2, \dots, s_n^n)$, particularly \eqref{E:greedy_seq},
+will be monotonously increasing.
+
+Let's take any correct sequence $s'$ and map it to the $s_{Mn}$,
+the sequence of $M \cdot n$ first numbers choosen by greedy algorithm.
+
+The greatest number in $s'$ wiill are in a row, where it must be
+the right most, according to asc order. So removing it from $s'$
+will result in still correct sequence.
+
+Then let's find the smallest not taken number in $s'$. It must be in
+a certain row. The next number to the right most taken will be the
+one we are searching for, again because of asc order. And as it is
+next to the taken one then it can be taken and will result
+in a correct sequence.
+
+Take numbers are those that are present in $s'$ and are mapped as taken
+in $s_{Mn}$.
+
+It has sense till the number of the right most in $s_{Mn}$ taken number
+has the position greater than $n$.
+
+Because after that we have the correct sequence consisting of exactly
+first $n$ numbers from $s_{Mn}$.
+
+And it has the minimal possible total sum of numbers, as any other
+replacement will only increase the total sum.
+
+\end{document}
