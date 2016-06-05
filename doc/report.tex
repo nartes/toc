@@ -98,7 +98,7 @@ equals:
   t_H^k(s)
     & \geqslant t_H^{k-1}(s) + p_H(k-1, t_H^{k-1}(s)) = \\
     & = \underset{>0}{\lambda_H(k-1)} +
-      \underset{\geqslant 2}{(1 + \phi_H(k-1))}t_H^{k-1}(s) 
+      \underset{\geqslant 2}{(1 + \phi_H(k-1))}t_H^{k-1}(s)
 \end{align*}
 
 Let's look at
@@ -217,5 +217,201 @@ first $n$ numbers from $s_{Mn}$.
 
 And it has the minimal possible total sum of numbers, as any other
 replacement will only increase the total sum.
+
+\subsection{Lecture's note 12}
+
+\begin{multicols}{2}
+  \hfill
+  \begin{equation}\label{E:equal_lp}
+    \begin{aligned}
+      & \lambda_H(k) = \lambda(k) \\
+      & \phi_H(k) = \phi(k)
+    \end{aligned}
+    \quad \forall H \in \{1,\dots,M\}
+  \end{equation}
+  \hfill
+  \begin{equation}\label{E:W_sorted}
+    W_1 \leqslant W_2 \leqslant \dots \leqslant W_M
+  \end{equation}
+  \hfill
+\end{multicols}
+
+\begin{equation}\label{E:pl_minmax}
+  \begin{aligned}
+    & \text{Moreover\quad }
+    \forall H_1, H_2: W_{H_1} < W_{H_2} \Rightarrow \\
+    & W_{H_2} < W_{H_1} (1 + \phi_{\min})
+      \min\{
+        \lambda_{\min} / \lambda_{\max},
+        \phi_{\min} / \phi_{\max}
+      \} \\
+    & \text{or \quad}
+    W_{H_2} < W_{H_1} \phi_{\min}
+  \end{aligned}
+\end{equation}
+
+Above are the additional restritctions regarding original problem.
+The problem remains the same, i.e. to minimize the total cost function.
+
+We can apply the greedy algorithm here too. And taking into account
+that \eqref{E:equal_lp} and \eqref{E:W_sorted} then also modifying
+algorithm so that it chooses the lowst machine number in case of equal
+additional price to cost function.
+
+\textbf{To be proved:}
+{\it And in the end we come up
+with uniform distribution of tasks.}
+
+At least we can say that
+\[
+  n_1(s^*) \geqslant n_2(s^*) \geqslant \dots \geqslant n_M(s^*),
+\]
+where $s^*$ -- the optimal solution.
+
+Let's revise $p(k)$ and $L(k)$:
+\[
+  \begin{aligned}
+    p(k) = \lambda(k-1) + \phi(k-1)L(k-1) & \\
+    L(k) = \lambda(k-1) + (1 + \phi(k-1))L(k-1) &
+  \end{aligned}
+  \quad k > 0
+\]
+
+\begin{multicols}{2}
+  \[
+    \begin{array}{r|rrrrrr}
+      \# & 0 & 1 & 2 & 3 & 4 & 5 \\
+      \hline
+      \phi:     & 1 & 2 & 1 & 1 & 3 & 4 \\
+      \lambda:  & 1 & 1 & 2 & 3 & 1 & 2 \\
+    \end{array}
+  \]
+
+  \[
+    W_1 = 1, W_2 = 2, W_3 = 3
+  \]
+
+  \hfill
+
+  \[
+    \begin{array}{r|lr|r|r|r|}
+      \hline
+      \#1 & L   & p   & W_1p & W_2p & W_3p \\
+      \hline
+      0   & 0   & 0   & 0    & 0    & 0     \\
+      1   & 1   & 1   & 1    & 2    & 3     \\
+      2   & 4   & 3   & 3    & 6    & 9     \\
+      3   & 10  & 6   & 6    & 12   & 18    \\
+      4   & 23  & 13  & 13   & 26   & 39    \\
+      5   & 93  & 70  & 70   & 140  & 210   \\
+      6   & 467 & 374 & 374  & 748  & 1114  \\
+      \hline
+    \end{array}
+  \]
+\end{multicols}
+
+The last three columns represent the possible additions to total
+sum. And thus we are to choose how much we take at each column
+in order to minimize total sum.
+
+\[
+  \begin{aligned}
+    & W_1p_1 <W_1p_2 < W_1p_3 < \dots \\
+    & W_2p_1 <W_2p_2 < W_2p_3 < \dots \\
+    & W_3p_1 <W_3p_2 < W_3p_3 < \dots \\
+    & \dots
+  \end{aligned}
+\]
+
+\begin{equation}
+  \begin{aligned}
+    & W_{H_1} < W_{H_2} \Rightarrow
+    & \left[
+      \begin{aligned}
+        & W_{H_2} < W_{H_1} (1 + \phi_{\min})
+          \min\{
+            \frac{\lambda_{\min}}
+              {\lambda_{\max}},
+            \frac{\phi_{\min}}
+              {\phi_{\max}}
+          \} \\
+        & W_{H_2} < W_{H_1} \phi_{\min}
+      \end{aligned}
+    \right.
+  \end{aligned}
+\end{equation}
+
+Let's take according to the greedy algorithm first few numbers, i.e.
+$W_1p_1=1$, $W_2p_1=2$, $W_1p_2=3$, $W_3p_1=3$, $W_1p_3=6$.
+Then it is easy to see that 6 on the third row is preferred over
+the 9 on the second row.
+
+\begin{center}$W_1p_3 < W_3p_2$ ?!, i.e. $6 < 9$.\end{center}
+
+Let's checkout \eqref{E:pl_minmax} according this instance:
+$3 < 1 \cdot (1 + 1) \min \{ \frac{1}{3}, \frac{1}{4} \}$.
+So it is not true thus assertion failed about uniform assignment (schedule).
+
+The following constraint
+\begin{equation}\label{E:uni_con}
+  W_1p_k \geqslant W_Mp_{k-1}, \forall k \geqslant 2
+\end{equation}
+holds iff a schedule has a uniform assignment. Of course with
+assumption that $W_1 \leqslant W_2 \leqslant \dots \leqslant W_M$.
+
+For the simples formulas argument $k$ of functions $p$, $L$, $\lambda$
+and $\phi$ are moved to the lower index.
+
+\[
+  \begin{aligned}
+    p_k & = \lambda_{k-1} + \phi_{k-1}L_{k-1} = \\
+        & = \lambda_{k-1} + \phi_{k-1}
+          ( \lambda_{k-2} + (1+\phi_{k-2})L_{k-2} )
+  \end{aligned}
+\]
+
+\[
+  p_{k-1} = \lambda_{k-2} + \phi_{k-2}L_{k-2}
+\]
+
+Let's make the constraint \eqref{E:uni_con} stronger:
+
+\[
+  \begin{aligned}
+    & W_1(\lambda_{k-1} + \phi_{k-1}p_{k-1} + \phi_{k-1}L_{k-2}) \geqslant
+        W_1\phi_{k-1}p_{k-1} \geqslant \\
+    & W_1\phi_{\min}p_{k-1} \geqslant W_Mp_{k-1} \Rightarrow
+  \end{aligned}
+\]
+
+\begin{equation}\label{E:str_sim_uni_con}
+  W_1\phi_{\min} \geqslant W_M
+\end{equation}
+
+Thus \eqref{E:str_sim_uni_con} holds iff the schedule has uniform
+distribution of jobs among machines.
+
+Let's obtain yet one strong form of the constraint \eqref{E:uni_con}:
+
+\[
+  W_1(\lambda_{k-1} + \phi_{k-1}(\lambda_{k-2} + \phi_{k-2}L_{k-2})
+    + \phi_{k-1}L_{k-2}) \geqslant
+      W_M(\lambda_{k-2} + \phi_{k-2}L_{k-2})
+\]
+
+\[
+  W_1(\lambda_{\min}(1+\phi_{\min}) + \phi_{\min}(1+\phi_{\min})L_{k-2})
+    \geqslant W_M(\lambda_{\max} + \phi_{\max}L_{k-2})
+\]
+
+\begin{equation}\label{E:str_str_uni_con}
+  \begin{cases}
+    & W_1 \lambda_{\min}(1+\phi_{\min}) \geqslant W_M\lambda_{\max} \\
+    & W_1 \phi_{\min}(1+\phi_{\min}) \geqslant W_M\phi_{\max}
+  \end{cases}
+\end{equation}
+
+And finishing with the same conslusion, that \eqref{E:str_str_uni_con}
+holds iff the schedule has uniform distribution of jobs among machines.
 
 \end{document}
