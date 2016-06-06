@@ -11,14 +11,22 @@
 
 \subsection{5}
 
-Исходное условие:
-Дан граф $G'=(V',E'), V'=\{1,\dots,k\}, |E'|=m$.
-Необходимо распознать наличие клики размера $c$.
+We have a problem
+$P1 | Prec, w_j= \{ 1,2,\frac{|A|}{2}-7 \}, pj=p | \sum w_j T_j \to \min$,
+where $T_j = \max \{C_j - d_j, 0\}$.
 
-Сводим к задаче
-$P1 | Prec, w_j= \{ 1,2,\frac{|A|}{2}-7 \}, pj=p | \sum w_j T_j$,
-где $T_j = \max \{C_j - d_j, 0\}$.
+Let's prove that the problem is in NP-hard strong sense class.
+We will reduce clique problem to the former one in a
+pseudo-polynomial way.
 
+The clique problem. Given a graph $G'=(V',E'), V'=\{1,\dots,k\}, |E'|=m$,
+need to recognize presence of clique of a size $c$.
+The number of clique's edges is denoted by
+$l = \frac{1}{2}c(c-1)$.
+
+Let's consider recognition problem, i.e. $\sum w_j T_j \leqslant y$.
+
+Let's choose the following jobs for the vertices and the edges of the $G'$
 \[
   v_i, \quad i=\overline{1,k}, \quad p_{v_i} = 1, \quad
   w_{v_i} = W, \quad d_{v_i} = k + l
@@ -31,48 +39,89 @@ $P1 | Prec, w_j= \{ 1,2,\frac{|A|}{2}-7 \}, pj=p | \sum w_j T_j$,
 
 \[
   Prec: v_i \to e_{ij}, \quad v_j \to e_{ij}, \quad
-  y = ?
 \]
 
-Если существует клика размера $c$, то
+Let's $d_{v_i} = k + m$ and $y = m - l$, then let's
+choose schedule with clique of a size $c$ and $l$ edges.
 
 \begin{verbatim}
-[         c           ][            l         ][             ]
-     вершины клики            ребра клики           ???
+[       c           ][     l    ][    k-c     ][       m - l   ]
+  clique's vertices   its edges    the rest edges and vertices
 \end{verbatim}
 
+And $\sum w_jT_j \geqslant y$ and equality holds if $(m-l)$
+edges are at the right side of the deadline $(k-l)$.
+But
 \[
-  \sum w_j T_j =
-  \sum_{<V>} t_i W +
-  \sum_{<E_1>} t_i + \sum_{<E_2>} t_i,
+  y' = \sum w_jT_j = \sum_{t=1}^{m-l} t = \frac{(m-l)(m-l+1)}{2} > (m-l)
 \]
-где $<E_1>$ множество ребер до $l+k$, а $<E_2>$ множество ребер
-после $l+k$.
+and so $y$ is not enough.
 
-1. Простои только ухудшают целевую функцию.
+And edges can be spreaded among $k - l + m - l$ places from the first
+$c + l + 1$ till the last $m - l + k - c$. Thus we shift
+$d_{v_j}$ to $d_{v_j} = k + l$ and set $w_{v_j}=\infty$.
 
-2. Между $c+l$ и $k+l$ ребра предпочтительнее чем вершины, если
-только не нарушается порядок предшествования.
+It will result in edges being out of $k - c$ region,
+because $w_{v_j}=+\infty$ guarantee that all vertices are in $k+l$.
+And up to $l$ edges are in there, the rest are in $(m-l)$.
 
-Давайте поступим другим образом:
+If there is a clique then schedule looks like
+\begin{verbatim}
+[       c           ][     l    ][    k-c         ][       m - l   ]
+  clique's vertices   its edges    rest vertices     rest edges
+\end{verbatim}
 
+Let's $w_{v_j}=W$, where $W$ to be determined.
+
+Let's transpose edge from $(m-l)$ with a vertice from $(k-c)$.
+We are to prove that the transposition has no benefit.
 \[
-  d_{v_j} = k + m, \quad w_{v_j} = 1
+  w_{v_j}T_{v_j} + w_{e_{ij}}T_{e_{ij}} <
+    w_{v_j}T'_{v_j} + w_{e_{ij}}T'_{e_{ij}},
 \]
-
+where $T$ -- old time, $T'$ -- new time. In equality stands that
+new schedule is worse than the old one. We are to find lower bound to $W$.
 \[
-  \sum_{<E>} t_i \leqslant m - l
+  \underset{=0}
+    {WT_{v_j}} +
+  T_{e_{ij}} \leqslant k - c + m - l <
+    W \leqslant
+      \underset{\geqslant W}
+        { w_{v_j} T'_{v_j} } +
+      \underset{\geqslant 0}
+        { T'_{e_{ij}} }
 \]
-то есть только ребра могут запаздывать
 
-$\sum U_j$ новая целевая функция.
-$\sum U_j = m - l$ есть условие задачи распознавания.
-Если в графе нет клики, то упаковка по крайней мере $|E|=l$ ребер
-на индуцированном графе $|V|=c$ вершинами не возможна, таким образом
-нужна больше вершин, тогда по крайней мере $m - l +1$
-работ запоздают.
+Thus $k-c+m-l < W$. Let's set $W=m-7$, then
+\[
+  k - c + m - l < m - 7 \Rightarrow c + l > k + 7
+\]
 
-\subsection{Лекция 11}
+Let's transform a clique problem from $G'$ and $c,k,l$ to
+$G''$ and $c',k',l'$ by adding $K_{k+7}$ and its vertices with
+all vertices of former $G'$.
+\[
+  k' = k + k + 7,\ c' = c + k + 7,
+  \ l' = l + \frac{(k+7)(k+7-1)}{2} + (k+7)c
+\]
+
+Such a $W$ and $G''$ guarantee that vertices are in $(k+l)$.
+
+If there is no clique in the graph then no more than $l-1$ edges
+are possible to be placed in $c+l$, otherwise it contradicts the absence
+of clique. So at least one dge will be in $(k-c)$, thus
+\[
+  \sum w_jT_j \geqslant 1 + (m-l)(k-c) + y' = 1 + y''
+\]
+
+So clique of size $c$ exists iff $\sum w_jT_j \geqslant y''$.
+
+The schedule can be checked in polynomial time $O(n)$.
+The reduction is pseudo-polynomial with time $O(q(k,c))$, while
+clique input is $O(k^2+ \log c)$. And so the recognition problem is NP-css.
+Thus the original problem is NP-hard in a strong sense.
+
+\subsection{Lecture 11}
 We have $M$ machines, and $n$ equal jobs to be processed.
 Each machine can process only one job at a time and has $W_h$ is a price
 for one time unit per $H=1,\dots,M$.
