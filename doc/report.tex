@@ -414,4 +414,126 @@ Let's obtain yet one strong form of the constraint \eqref{E:uni_con}:
 And finishing with the same conslusion, that \eqref{E:str_str_uni_con}
 holds iff the schedule has uniform distribution of jobs among machines.
 
+\#1 Let's consider the following subproblem ({\bf LastDigit}):
+\[
+  M=2, W_1=2, W_2=3, \lambda_H(k)=\lambda=\phi_H(k)=\phi(k), \forall k
+\]
+We are to find out whether $F(s^*) \equiv 5 (\bmod 10)$,
+where $s^*$ is the optimal solution for the such problem.
+
+\#2 Let's take the following instance of the partitioning problem:
+\[
+  e_1, e_2, \dots, e_p \text{\quad - the given set}
+\]
+And we are to find such $z \in { \{0,1\} }^p$, that
+$\sum_{l=1}^p e_l z_l = E$, while $\sum_{l=1}^p e_l = 2E$.
+
+Let's reduce the problem \#2 to the problem \#1.
+
+For that let's define
+\[
+  \phi(k) =
+  \begin{cases}
+    4, \sum_{l=1}^p e_l b_l(k) \not = E, \\
+    3, \sum_{l=1}^p e_l b_l(k) = E,
+  \end{cases}
+\]
+where $b(k)$ is a binary representation vector for a number $k$.
+
+Let's checkout uniform schedule constraints:
+\[
+  2 < 3 \text{ and } 2 (1 + 3) \frac{3}{4} = 6 > 3
+  \Rightarrow \text{uniform schedule}
+\]
+
+Let's choose some values for $\phi(k)$:
+\[
+  \phi_k = (4, 4, 4, 3, 3, 4, 3, 4, 4).
+\]
+
+Let's revise the formulas of $p_k$ and $L_k$:
+\[
+  p_k=\lambda_{k-1} + \phi_{k-1}L_{k-1},
+  L_k = \lambda_{k-1} + (1 + \phi_{k-1})L_{k-1}
+\]
+
+Let's calculate first few values for $p_k$ and $L_k$:
+\[
+  \begin{array}{r|ccccccccc}
+    & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
+    \hline
+    p & 4 & 20 & 100 \\
+    L & 4 & 24 & 124 & 499 & 1999 & 9999 & 39999 & 199999 & 999999 \\
+  \end{array}
+\]
+
+Let's assume that there is no valid partition for the instance of the problem
+\#2. Then $\lambda_k=\phi_k=4$.
+
+\begin{align*}
+  & T_{n+1} = 4 + 5 T_n \\
+  & T_0 = 0 \\
+  & T_n = 4 + 5 T_{n-1} \\
+  & T_{n+1} = 4 + 20 + 25 T_{n-2}
+    = 4 + 20 + 100 + 125 T_{n-2} \\
+  & 4(1 + 5 + \dots + 5^{n-1}) + 4 \cdot 5^n=
+    \frac{4(1-5^{n+1})}
+      {1 - 5} = 5^{n+1} - 1 \Rightarrow
+\end{align*}
+\[
+  \begin{cases}
+    W_1L_k = 2 (5^{k+1}-1) \equiv 8 (\bmod 10), \\
+    W_2L_k = 3 (5^{k+1}-1) \equiv 2 (\bmod 10),
+  \end{cases}
+\]
+i.e. last digit in case of absence the solution for the partition problem
+equals $F(s^*)=W_1L_{n_1(s^*)}+W_2L_{n_2(s^*)} \equiv 0 (\bmod 10)$.
+
+Let's apply different $\phi_k$ to the last digit of $L_k$ when it equals 9:
+\[
+  9 \cdot 5 + 4 = 49, \quad 9 \cdot 4 + 3 = 19
+\]
+Thus at least one digit 9 is enough to make the rest sequence $L_k$ to containt
+it.
+
+Let's suppose that there at least one valid partition for the problem \#2.
+Then there is such a $k \in \{1,\dots,2^p\}$ that $\phi_{k-1}=3$.
+\begin{align*}
+  & L_{k > 0}=(5^{k}-1) \equiv 4 (\bmod 10),
+    \ 4 \cdot 4 + 3 = 19 \equiv 9 (\bmod 10) \\
+  & L_0 = 0, \ 4 \cdot 0 + 3 = 3
+\end{align*}
+Thus if at least one $k$ satisfies partitioning
+then $L_k \equiv 9 \lor 3 \ (\bmod 10)$.
+
+Let's note that if $k=1$ represents a good partition then $L_1=3$.
+It is easy to see that last digit 3 transforamtes in the following way:
+\begin{align*}
+  & L:\ 3\ 15\ 63 \Rightarrow 3 \to 5 \to 3 \\
+  & L:\ 3\ 19\ 99 \Rightarrow 3 \to 9 \to 9
+\end{align*}
+
+So if there at least one good partition
+then last digit of $L_{2^p}$ can be 3, 5 or 9.
+
+{\it Let's finaly choose the value $n$ and it will be $n=2\cdot2^p$.}
+Then the last digit of $F(s^*)$ might be:
+\begin{align*}
+  & (2 + 3) 9 = 45 \equiv 5\ (\bmod\ 10) \\
+  & (2 + 3) 3 = 15 \equiv 5\ (\bmod\ 10) \\
+  & (2 + 3) 5 = 25 \equiv 5\ (\bmod\ 10)
+\end{align*}
+
+So partition exists iff $F(s^*) \equiv 5\ (\bmod\ 10)$.
+
+{\it
+  Of course we rely upon the fact that the optimal schedule is uniform
+  and so it contains $2^p$ jobs per each of two machines.
+}
+
+The input of both problem \#1 and \#2 is O(p). Any function $\lambda_k$
+or $\phi_k$ can be calculated with O(p) time.
+And as the problem \#1 in NP and we reduced the NP-c problem \#2 to it
+with polynomial time then of course the problem \#1 is the NP-c.
+
 \end{document}
