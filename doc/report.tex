@@ -102,7 +102,7 @@ $G''$ and $c',k',l'$ by adding $K_{k+7}$ and its vertices with
 all vertices of former $G'$.
 \[
   k' = k + k + 7,\ c' = c + k + 7,
-  \ l' = l + \frac{(k+7)(k+7-1)}{2} + (k+7)c
+  \ l' = l + \frac{(k+7)(k+7-1)}{2} + (k+7)k
 \]
 
 Such a $W$ and $G''$ guarantee that vertices are in $(k+l)$.
@@ -114,7 +114,7 @@ of clique. So at least one dge will be in $(k-c)$, thus
   \sum w_jT_j \geqslant 1 + (m-l)(k-c) + y' = 1 + y''
 \]
 
-So clique of size $c$ exists iff $\sum w_jT_j \geqslant y''$.
+So clique of size $c$ exists iff $\sum w_jT_j \leqslant y''$.
 
 The schedule can be checked in polynomial time $O(n)$.
 The reduction is pseudo-polynomial with time $O(q(k,c))$, while
